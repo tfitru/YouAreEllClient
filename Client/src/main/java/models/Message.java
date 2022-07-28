@@ -1,6 +1,10 @@
 package models;
 
-/* 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
+
+/*
  * POJO for an Message object
  *
  *   {
@@ -13,15 +17,22 @@ package models;
 
 *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class Message implements Comparable {
+
 
     private String message = "";
     private String toId = "";
     private String fromId = "";
     private String timestamp = "";
-    private String seqId = "";
 
-    public Message (String message, String fromId, String toId) {
+    private String sequence = "";
+
+    public Message(){
+    }
+
+    public Message (String fromId, String toId, String message) {
         this.message = message;
         this.fromId = fromId;
         this.toId = toId;
@@ -33,13 +44,21 @@ public class Message implements Comparable {
         this.toId = "";
     }
 
+    public Message (String message, String fromId, String toId, String timestamp, String sequence){
+        this.message = message;
+        this.fromId = fromId;
+        this.toId = toId;
+        this.timestamp = timestamp;
+        this.sequence = sequence;
+    }
+
     @Override
     public String toString() {
         return "to: " + this.toId + "\nfrom: "+ this.fromId + "\n" + this.message + "\n----\n";
     }
 
     public int compareTo(Object o) {
-        return this.seqId.compareTo(((Message) o).getSeqId());
+        return this.sequence.compareTo(((Message) o).getSeqId());
     }
 
     public String getMessage() {
@@ -69,8 +88,7 @@ public class Message implements Comparable {
     public String getTimestamp() {
         return timestamp;
     }
-
     public String getSeqId() {
-        return seqId;
+        return sequence;
     }
 }

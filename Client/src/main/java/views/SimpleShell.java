@@ -9,6 +9,10 @@ import java.util.List;
 
 import controllers.IdController;
 import controllers.MessageController;
+import controllers.ServerController;
+import controllers.TransactionController;
+import models.Id;
+import models.Message;
 import youareell.YouAreEll;
 
 // Simple Shell is a Console view for youareell.YouAreEll.
@@ -16,10 +20,11 @@ public class SimpleShell {
 
 
     public static void prettyPrint(String output) {
+       output = output.replaceAll(",", "");
         // yep, make an effort to format things nicely, eh?
         System.out.println(output);
     }
-    public static void main(String[] args) throws java.io.IOException {
+    public static void main(String[] args) throws Exception {
 
         YouAreEll urll = new YouAreEll(new MessageController(), new IdController());
         
@@ -56,7 +61,7 @@ public class SimpleShell {
             }
             System.out.print(list); //***check to see if list was added correctly***
             history.addAll(list);
-            try {
+
                 //display history of shell with index
                 if (list.get(list.size() - 1).equals("history")) {
                     for (String s : history)
@@ -68,17 +73,31 @@ public class SimpleShell {
 
                 // ids
                 if (list.contains("ids")) {
-                    String results = webber.get_ids();
+                    IdController webber = new IdController();
+                    TransactionController me  = new TransactionController();
+                    Id id = me.postId("-", "Fitru", "tfitru");
+                    continue;
+                } if(list.contains("add")){
+                    TransactionController me  = new TransactionController();
+                    String results = String.valueOf(me.postId("-", "Fitru", "tfitru"));
                     SimpleShell.prettyPrint(results);
+            }// messages
+                if (list.contains("messages")) {
+                    ServerController svr = new ServerController();
+                    Id id = new Id("-", "Fitru", "tfitru");
+                    Id id2 = new Id("0c4cdcfca14f5871698dd1624a7a9b81e2c94f80", "Jiayong", "linjiayo");
+                    MessageController me = new MessageController();
+                    MessageController me1 = new MessageController();
+                    Message message = new Message("Hi Professor", "tfitru");
+//                    String results = String.valueOf(me.getMessages());
+                    String results1 ="";
+//                    me1.postMessage(id, id2, message);
+                    results1 = String.valueOf(me1.postMessage(id,id2,message));
+//                    SimpleShell.prettyPrint(results);
+                    SimpleShell.prettyPrint(results1);
                     continue;
                 }
 
-                // messages
-                if (list.contains("messages")) {
-                    String results = webber.get_messages();
-                    SimpleShell.prettyPrint(results);
-                    continue;
-                }
                 // you need to add a bunch more.
 
                 //!! command returns the last command in history
@@ -109,12 +128,12 @@ public class SimpleShell {
                 // br.close();
 
 
-            }
+
+
 
             //catch ioexception, output appropriate message, resume waiting for input
-            catch (IOException e) {
                 System.out.println("Input Error, Please try again!");
-            }
+
             // So what, do you suppose, is the meaning of this comment?
             /** The steps are:
              * 1. parse the input to obtain the command and any parameters

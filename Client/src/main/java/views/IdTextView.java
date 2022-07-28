@@ -2,6 +2,8 @@ package views;
 
 import models.Id;
 
+import java.util.List;
+
 public class IdTextView {
     private Id id;
 
